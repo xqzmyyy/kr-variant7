@@ -1,71 +1,196 @@
-# Poultry Farm Management System
-
-## Project Description
-
-This project is a software system designed to assist in the administration of a poultry farm. The system manages information about farm employees and chickens housed on the farm.
-
-## Chicken Information
-
-The system stores the following details for each chicken:
-- **Weight**  
-- **Age**  
-- **Number of eggs laid monthly**  
-- **Location** (specific cage assigned to the chicken)
-
-Each chicken is assigned to a unique cage.
-
-## Employee Information
-
-The system also tracks information about farm employees:
-- **Passport details**  
-- **Salary**  
-- **Assigned cages**
-
-## Business Rules
-
-- Each chicken must be serviced by at least one employee.  
-- The number of chickens may increase or decrease over time.  
-- Some cages may remain empty at certain moments.  
-- The price of eggs is the same for all chickens.  
-- Dates are limited to the days within a single month.
-
-## Key Entities and Attributes
-
-- **Chicken**:
-  - Weight
-  - Age
-  - Egg-laying rate (productivity)
-  - Breed
-  - Cage location
-  - Egg-laying status (laid/not laid)
-  
-- **Employee**:
-  - Full name
-  - Salary
-  - Assigned cages
-
-- **Cage**:
-  - Unique ID
-
-## Generalized Lists
-
-The system will include the following lists:
-- Chickens  
-- Poultry farm  
-- Employees  
-
-## Reports for the Director
-
-The system must generate the following reports:
-1. **Average number of eggs**: Produced by chickens of a specific weight and age.  
-2. **Total eggs and value**: Total number of eggs produced over a date range and their total monetary value.  
-3. **Employee performance**: Number of eggs collected by each employee.  
-4. **Underperforming chickens**: Chickens that laid fewer eggs than the farm's average productivity.  
-5. **Top-performing chicken**: The cage of the chicken that laid the most eggs.  
-6. **Employee assignments**: Number of chickens assigned to each employee.  
-
-## Additional Features
-
-- Ability to add and remove chickens.  
 
 ---
+
+# Poultry Farm Management System
+
+Welcome to the **Poultry Farm Management System** project! This is a console application for managing a poultry farm system. It allows users to work with information about employees, chickens, and cages. The project is built using **.NET 8.0**, **Entity Framework Core**, and **SQLite**.
+
+---
+
+## 🛠️ Project Structure
+
+KR-V7/  
+├── bin/                 # Build output (ignored in Git)  
+├── Data/                # Database context and seed data  
+├── Migrations/          # EF Core migrations  
+├── Models/              # Entity models  
+├── Repositories/        # Repositories for database operations  
+├── Tests/               # Unit tests  
+├── net8.0/              # Build artifacts (ignored in Git)  
+├── obj/                 # Build cache (ignored in Git)  
+├── Program.cs           # Main entry point  
+├── .gitignore           # Git ignore rules  
+├── ProjectSolution.sln  # Solution file  
+└── README.md            # Project documentation  
+
+---
+
+## 🚀 Getting Started
+
+Follow these steps to set up and run the project locally:
+
+### 1. Clone the Repository
+
+```
+git clone git@github.com:xqzmyyy/kr-variant7.git  
+cd kr-variant7
+```
+
+### 2. Restore Dependencies
+
+Make sure you have `.NET 8.0 SDK` installed, then restore all dependencies:
+
+```
+dotnet restore
+```
+
+### 3. Create Migrations (if needed)
+
+If you make changes to the models or are setting up for the first time:
+
+```
+dotnet ef migrations add InitialCreate
+```
+
+### 4. Apply Migrations
+
+To apply the migrations and create the database:
+
+```
+dotnet ef database update
+```
+
+### 5. Build the Project
+
+Build the project to ensure all dependencies and configurations are correct:
+
+```
+dotnet build
+``` 
+
+### 6. Run the Application
+
+To start the application, run:
+
+```
+dotnet run
+``` 
+
+---
+
+## 📋 Database Management
+
+The project uses **Entity Framework Core** and **SQLite** for database management. Here are some common operations:
+
+- **Create a new migration**:
+```  
+dotnet ef migrations add <MigrationName> 
+```
+
+- **Apply migrations to update the database**:
+```
+dotnet ef database update --project kr-v7/kr-v7.csproj
+```
+
+- **Recreate the database (optional)**:
+```
+rm kr-v7/Data/database.db  
+dotnet ef database update  
+```
+
+---
+
+## 🧪 Running Tests
+
+The project includes unit tests for all core functionalities. To run the tests:
+
+```
+dotnet test
+```
+
+Test files are located in the `Tests/` directory.
+
+---
+
+## 🔧 Prerequisites
+
+Ensure you have the following installed on your system:
+
+- .NET 8.0 SDK  
+- Git  
+
+---
+## 📦 **Database Models**
+
+### 1. **Chicken** (Model for chickens)
+Stores information about each chicken on the poultry farm.
+
+#### Fields:
+- **Id** (int): Unique identifier for the chicken.
+- **Weight** (double): Weight of the chicken.
+- **Age** (int): Age of the chicken in months.
+- **EggsPerMonth** (int): Number of eggs laid by the chicken per month.
+- **CageId** (int): Reference to the cage where the chicken is located.
+
+---
+
+### 2. **Employee** (Model for employees)
+Stores data about employees on the poultry farm.
+
+#### Fields:
+- **Id** (int): Unique identifier for the employee.
+- **Name** (string): Name of the employee.
+- **Salary** (double): Salary of the employee.
+- **Cages** (List<Cage>): List of cages assigned to the employee.
+
+---
+
+### 3. **Cage** (Model for cages)
+Stores information about cages where chickens are kept.
+
+#### Fields:
+- **Id** (int): Unique identifier for the cage.
+- **EmployeeId** (int): Reference to the employee responsible for the cage.
+- **ChickenId** (int?): Reference to the chicken currently in the cage (can be null).
+- **Employee** (Employee): Navigation property linking the cage to its employee.
+- **Chicken** (Chicken): Navigation property linking the cage to its chicken.
+
+---
+
+## 🔨 **Main Methods**
+
+### 1. **Chicken Methods**
+- **AddChicken**: Adds a new chicken to the database.
+- **DeleteChicken**: Removes a chicken from the database by its ID.
+- **GetChickenWithMostEggs**: Retrieves the chicken that lays the most eggs.
+- **CalculateAverageEggs**: Calculates the average number of eggs for chickens based on weight and age.
+
+### 2. **Employee Methods**
+- **GetEmployeeChickenCount**: Returns the number of chickens assigned to an employee.
+- **ListAllEmployees**: Retrieves all employees and their details.
+
+### 3. **Cage Methods**
+- **AssignChickenToCage**: Assigns a chicken to a cage.
+- **GetAllCages**: Retrieves all cages, including their assigned chickens and employees.
+
+---
+
+## 🧪 **Testing Methods**
+Tests for all main functionalities are implemented in the `Tests` directory using xUnit:
+- **ChickenTests**: Validates adding, deleting, and calculating chicken statistics.
+- **EmployeeTests**: Validates assigning cages to employees.
+- **CageTests**: Validates cage assignment and chicken-cage relationships.
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+---
+
+## 🛡️ Maintainers
+
+- **kk**
+
+Developed by the student as a coursework.
