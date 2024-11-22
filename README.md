@@ -85,7 +85,7 @@ dotnet ef database update
 
 - **Recreate the database (optional)**:
 ```
-rm kr-v7/Data/database.db  
+rm poultry-farm-management-system/Data/database.db  
 dotnet ef database update  
 ```
 

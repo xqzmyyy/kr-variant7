@@ -4,9 +4,12 @@ using farm.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
-namespace Tests {
-    public class ChickenTests {
-        private AppDbContext GetInMemoryContext() {
+namespace Tests 
+{
+    public class ChickenTests 
+    {
+        private AppDbContext GetInMemoryContext() 
+        {
             var options = new DbContextOptionsBuilder<AppDbContext>()
                 .UseInMemoryDatabase(databaseName: "TestDatabase")
                 .Options;
@@ -14,7 +17,8 @@ namespace Tests {
         }
 
         // clear database
-        private void ClearDatabase(AppDbContext context) {
+        private void ClearDatabase(AppDbContext context) 
+        {
             context.Chickens.RemoveRange(context.Chickens);
             context.Cages.RemoveRange(context.Cages);
             context.Employees.RemoveRange(context.Employees);
@@ -22,8 +26,10 @@ namespace Tests {
         }
 
         [Fact]
-        public void CanAddChicken() {
-            using (var context = GetInMemoryContext()) {
+        public void CanAddChicken() 
+        {
+            using (var context = GetInMemoryContext()) 
+            {
                 ClearDatabase(context);
 
                 // create cage without chicken
@@ -49,8 +55,10 @@ namespace Tests {
         }
 
         [Fact]
-        public void CanDeleteChicken() {
-            using (var context = GetInMemoryContext()) {
+        public void CanDeleteChicken() 
+        {
+            using (var context = GetInMemoryContext()) 
+            {
                 ClearDatabase(context);
 
                 // create cage and chicken
@@ -75,7 +83,8 @@ namespace Tests {
         }
 
         [Fact]
-        public void CanCalculateAverageEggs() {
+        public void CanCalculateAverageEggs() 
+        {
             using (var context = GetInMemoryContext()) {
                 ClearDatabase(context);
 
@@ -94,8 +103,10 @@ namespace Tests {
         }
 
         [Fact]
-        public void CanFindChickenWithMostEggs() {
-            using (var context = GetInMemoryContext()) {
+        public void CanFindChickenWithMostEggs() 
+        {
+            using (var context = GetInMemoryContext()) 
+            {
                 ClearDatabase(context);
 
                 // add chicken

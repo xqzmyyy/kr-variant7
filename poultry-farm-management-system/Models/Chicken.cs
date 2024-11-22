@@ -1,6 +1,7 @@
 namespace farm.Models
 
-public class Chicken {
+public class Chicken 
+{
     public int Id { get; set; } // id
     public int Age { get; set; } // age
     public double Weight { get; set; } // weight

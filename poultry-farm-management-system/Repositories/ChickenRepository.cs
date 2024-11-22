@@ -4,17 +4,21 @@ using Microsoft.EntityFrameworkCore;
 using farm.Data; 
 using farm.Models;
 
-namespace farm.Repositories {
+namespace farm.Repositories 
+{
     public static class ChickenRepository {
         // get all chickens
-        public static List<Chicken> GetAllChickens() {
-            using (var context = new AppDbContext()) {
+        public static List<Chicken> GetAllChickens() 
+        {
+            using (var context = new AppDbContext()) 
+            {
                 return context.Chickens.ToList();
             }
         }
 
         // get weight and age
-        public static List<Chicken> GetChickensByWeightAndAge(double weight, int age) {
+        public static List<Chicken> GetChickensByWeightAndAge(double weight, int age) 
+        {
             using (var context = new AppDbContext()) {
                 return context.Chickens
                     .Where(c => c.Weight == weight && c.Age == age)
@@ -23,7 +27,8 @@ namespace farm.Repositories {
         }
 
         // get chicken with the most count of eggs
-        public static Chicken GetChickenWithMostEggs() {
+        public static Chicken GetChickenWithMostEggs() 
+        {
             using (var context = new AppDbContext()) {
                 return context.Chickens
                     .OrderByDescending(c => c.EggsPerMonth)
@@ -32,7 +37,8 @@ namespace farm.Repositories {
         }
 
         // get chickens below average
-        public static List<Chicken> GetChickensBelowAverage() {
+        public static List<Chicken> GetChickensBelowAverage() 
+        {
             using (var context = new AppDbContext())
             {
                 var averageEggs = context.Chickens.Average(c => c.EggsPerMonth);
@@ -43,7 +49,8 @@ namespace farm.Repositories {
         }
 
         // add chicken
-        public static void AddChicken(Chicken chicken) {
+        public static void AddChicken(Chicken chicken) 
+        {
             using (var context = new AppDbContext()) {
                 context.Chickens.Add(chicken);
                 context.SaveChanges();
@@ -51,8 +58,10 @@ namespace farm.Repositories {
         }
 
         // delete chicken
-        public static bool DeleteChicken(int id) {
-            using (var context = new AppDbContext()) {
+        public static bool DeleteChicken(int id) 
+        {
+            using (var context = new AppDbContext()) 
+            {
                 var chicken = context.Chickens.Find(id);
                 if (chicken == null) return false;
 

@@ -2,17 +2,18 @@
 using System.Linq;
 using farm.Data;
 using farm.Models;
-using farm.Repositories;
 
-class Program {
-    static void Main(string[] args) {
-        using (var context = new AppDbContext()) {
+class Program 
+{
+    static void Main(string[] args) 
+    {
+        using (var context = new AppDbContext()) 
+        {
             // init new database
             context.SeedData();
         }
 
         while (true) {
-            // start menu options
             Console.Clear();
             PrintHeader("=== Меню ===", ConsoleColor.Red);
             PrintMenuOption("1", "📋 Список всіх курей");
@@ -34,8 +35,8 @@ class Program {
 
             Console.Clear();
 
-            // choices
-            switch (choice) {
+            switch (choice) 
+            {
                 case "1":
                     ListAllChickens();
                     break;
@@ -79,9 +80,10 @@ class Program {
         }
     }
 
-    // list of all chickens
-    static void ListAllChickens() {
-        using (var context = new AppDbContext()) {
+    static void ListAllChickens() 
+    {
+        using (var context = new AppDbContext()) 
+        {
             PrintHeader("=== Список всіх курей ===", ConsoleColor.Red);
             var chickens = context.Chickens.ToList();
             foreach (var chicken in chickens) {
@@ -90,76 +92,105 @@ class Program {
         }
     }
 
-    // list of all employees
-    static void ListAllEmployees() {
-        using (var context = new AppDbContext()) {
+    static void ListAllEmployees() 
+    {
+        using (var context = new AppDbContext()) 
+        {
             PrintHeader("=== Список всіх працівників ===", ConsoleColor.Red);
             var employees = context.Employees.ToList();
-            foreach (var employee in employees) {
+            foreach (var employee in employees) 
+            {
                 PrintMessage($"ID: {employee.Id}, Ім'я: {employee.Name}, Зарплата: {employee.Salary}", ConsoleColor.White);
             }
         }
     }
 
-    // list of all cages
-    static void ListAllCages() {
-        using (var context = new AppDbContext()) {
+    static void ListAllCages() 
+    {
+        using (var context = new AppDbContext()) 
+        {
             PrintHeader("=== Список всіх кліток ===", ConsoleColor.Red);
             var cages = context.Cages.ToList();
-            foreach (var cage in cages) {
-                PrintMessage($"ID: {cage.Id}, Курица ID: {(cage.ChickenId.HasValue ? cage.ChickenId.Value.ToString() : "Порожня")}, Працівник ID: {cage.EmployeeId}", ConsoleColor.White);
+            foreach (var cage in cages) 
+            {
+                PrintMessage($"ID: {cage.Id}, Курица ID: {(cage.ChickenId.HasValue ? cage.ChickenId.Value.ToString() : "Порожня")}, Працівник ID: {cage.EmployeeId}, Дата: {cage.Date.ToShortDateString()}, Яйце знесено: {cage.IsEggLaid}", ConsoleColor.White);
             }
         }
     }
 
-    // average count of eggs (age and weight)
-    static void AverageEggsForWeightAndAge() {
+    static void AverageEggsForWeightAndAge() 
+    {
         Console.Write("Введіть вагу курки: ");
-        var weight = double.Parse(Console.ReadLine()!);
+        if (!double.TryParse(Console.ReadLine(), out var weight)) 
+        {
+            PrintMessage("❌ Неправильний формат ваги!", ConsoleColor.Red);
+            return;
+        }
 
         Console.Write("Введіть вік курки: ");
-        var age = int.Parse(Console.ReadLine()!);
+        if (!int.TryParse(Console.ReadLine(), out var age)) 
+        {
+            PrintMessage("❌ Неправильний формат віку!", ConsoleColor.Red);
+            return;
+        }
 
-        using (var context = new AppDbContext()) {
-            var average = context.Chickens
-                .Where(c => c.Weight == weight && c.Age == age)
-                .Average(c => c.EggsPerMonth);
-
+        using (var context = new AppDbContext()) 
+        {
+            var chickens = context.Chickens.Where(c => c.Weight == weight && c.Age == age).ToList();
+            if (!chickens.Any()) 
+            {
+                PrintMessage("Курей з такими параметрами не знайдено.", ConsoleColor.Yellow);
+                return;
+            }
+            var average = chickens.Average(c => c.EggsPerMonth);
             PrintMessage($"Середня кількість яєць для курей з вагою {weight} та віком {age}: {average}", ConsoleColor.White);
         }
     }
 
-    // count of eggs and their price
-    static void TotalEggsForDateRange() {
-        const double eggPrice = 10; // price of one egg
+    static void TotalEggsForDateRange() 
+    {
+        const double eggPrice = 10;
 
         Console.Write("Введіть загальну кількість днів у діапазоні: ");
-        var days = int.Parse(Console.ReadLine()!);
+        if (!int.TryParse(Console.ReadLine(), out var days)) 
+        {
+            PrintMessage("❌ Неправильний формат кількості днів!", ConsoleColor.Red);
+            return;
+        }
 
-        using (var context = new AppDbContext()) {
-            var totalEggs = context.Chickens.Sum(c => c.EggsPerMonth);
+        using (var context = new AppDbContext()) 
+        {
+            var totalEggs = context.Cages
+                .Where(c => c.Date >= DateTime.Today.AddDays(-days) && c.IsEggLaid)
+                .Count();
             var totalValue = totalEggs * eggPrice;
 
             PrintMessage($"Загальна кількість яєць: {totalEggs}, Загальна вартість: {totalValue} грн", ConsoleColor.White);
         }
     }
 
-    // chicken with the most eggs
-    static void ChickenWithMostEggs() {
-        using (var context = new AppDbContext()) {
+    static void ChickenWithMostEggs() 
+    {
+        using (var context = new AppDbContext()) 
+        {
             var chicken = context.Chickens
                 .OrderByDescending(c => c.EggsPerMonth)
                 .FirstOrDefault();
 
-            if (chicken != null) return PrintMessage($"Курка з найбільшою кількістю яєць - ID: {chicken.Id}, Яйця в місяць: {chicken.EggsPerMonth}", ConsoleColor.White);
-               
-            PrintMessage("Немає даних про курей.", ConsoleColor.Red);
+            if (chicken == null) 
+            {
+                PrintMessage("Немає даних про курей.", ConsoleColor.Red);
+                return;
+            }
+
+            PrintMessage($"Курка з найбільшою кількістю яєць - ID: {chicken.Id}, Яйця в місяць: {chicken.EggsPerMonth}", ConsoleColor.White);
         }
     }
 
-    // count of chickens per every employee
-    static void ChickensPerEmployee() {
-        using (var context = new AppDbContext()) {
+    static void ChickensPerEmployee() 
+    {
+        using (var context = new AppDbContext()) 
+        {
             var employees = context.Employees
                 .Select(e => new {
                     e.Name,
@@ -167,40 +198,62 @@ class Program {
                 }).ToList();
 
             PrintHeader("=== Кількість курей у кожного працівника ===", ConsoleColor.Red);
-            foreach (var employee in employees) PrintMessage($"Працівник: {employee.Name}, Кількість курей: {employee.ChickenCount}", ConsoleColor.White);
+            foreach (var employee in employees) 
+            {
+                PrintMessage($"Працівник: {employee.Name}, Кількість курей: {employee.ChickenCount}", ConsoleColor.White);
+            }
         }
     }
 
-    // below average chicken
-    static void ChickensBelowAverage() {
-        using (var context = new AppDbContext()) {
+    static void ChickensBelowAverage() 
+    {
+        using (var context = new AppDbContext()) 
+        {
             var averageEggs = context.Chickens.Average(c => c.EggsPerMonth);
             var chickens = context.Chickens
                 .Where(c => c.EggsPerMonth < averageEggs)
                 .ToList();
 
             PrintHeader("=== Куриці з несучістю нижче середньої ===", ConsoleColor.Red);
-
-            foreach (var chicken in chickens) PrintMessage($"ID: {chicken.Id}, Яйця в місяць: {chicken.EggsPerMonth}", ConsoleColor.White);
+            foreach (var chicken in chickens) 
+            {
+                PrintMessage($"ID: {chicken.Id}, Яйця в місяць: {chicken.EggsPerMonth}", ConsoleColor.White);
+            }
         }
     }
 
-    // add chicken
-    static void AddChicken()
+    static void AddChicken() 
     {
         Console.Write("Введіть вагу курки: ");
-        var weight = double.Parse(Console.ReadLine()!);
+        if (!double.TryParse(Console.ReadLine(), out var weight)) 
+        {
+            PrintMessage("❌ Неправильний формат ваги!", ConsoleColor.Red);
+            return;
+        }
 
         Console.Write("Введіть вік курки: ");
-        var age = int.Parse(Console.ReadLine()!);
+        if (!int.TryParse(Console.ReadLine(), out var age)) 
+        {
+            PrintMessage("❌ Неправильний формат віку!", ConsoleColor.Red);
+            return;
+        }
 
         Console.Write("Введіть кількість яєць на місяць: ");
-        var eggs = int.Parse(Console.ReadLine()!);
+        if (!int.TryParse(Console.ReadLine(), out var eggs)) 
+        {
+            PrintMessage("❌ Неправильний формат кількості яєць!", ConsoleColor.Red);
+            return;
+        }
 
         Console.Write("Введіть ID клітки: ");
-        var cageId = int.Parse(Console.ReadLine()!);
+        if (!int.TryParse(Console.ReadLine(), out var cageId)) 
+        {
+            PrintMessage("❌ Неправильний формат ID клітки!", ConsoleColor.Red);
+            return;
+        }
 
-        using (var context = new AppDbContext()) {
+        using (var context = new AppDbContext()) 
+        {
             context.Chickens.Add(new Chicken {
                 Weight = weight,
                 Age = age,
@@ -212,33 +265,38 @@ class Program {
         }
     }
 
-    // delete chicken
-    static void DeleteChicken() {
+    static void DeleteChicken() 
+    {
         Console.Write("Введіть ID курки для видалення: ");
-        var id = int.Parse(Console.ReadLine()!);
+        if (!int.TryParse(Console.ReadLine(), out var id)) 
+        {
+            PrintMessage("❌ Неправильний формат ID!", ConsoleColor.Red);
+            return;
+        }
 
-        using (var context = new AppDbContext()) {
+        using (var context = new AppDbContext()) 
+        {
             var chicken = context.Chickens.Find(id);
-            if (chicken != null) {
-                context.Chickens.Remove(chicken);
-                context.SaveChanges();
-                PrintMessage("🚫 Курка видалена.", ConsoleColor.Green);
-                return
+            if (chicken == null) 
+            {
+                PrintMessage("Курка з таким ID не знайдена.", ConsoleColor.Yellow);
+                return;
             }
-            
-            PrintMessage("Курка з таким ID не знайдена.", ConsoleColor.Red);
+            context.Chickens.Remove(chicken);
+            context.SaveChanges();
+            PrintMessage("🚫 Курка видалена.", ConsoleColor.Green);
         }
     }
 
-    // print header of menu
-    static void PrintHeader(string text, ConsoleColor color) {
+    static void PrintHeader(string text, ConsoleColor color) 
+    {
         Console.ForegroundColor = color;
         Console.WriteLine(text);
         Console.ResetColor();
     }
 
-    // create menu option
-    static void PrintMenuOption(string number, string text) {
+    static void PrintMenuOption(string number, string text) 
+    {
         Console.ForegroundColor = ConsoleColor.DarkYellow;
         Console.Write($"[{number}] ");
         Console.ForegroundColor = ConsoleColor.Red;
@@ -246,8 +304,8 @@ class Program {
         Console.ResetColor();
     }
 
-    // print message
-    static void PrintMessage(string message, ConsoleColor color) {
+    static void PrintMessage(string message, ConsoleColor color) 
+    {
         Console.ForegroundColor = color;
         Console.WriteLine(message);
         Console.ResetColor();
