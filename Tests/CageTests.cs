@@ -1,23 +1,19 @@
 using Xunit;
-using krv7.Data;
-using krv7.Models;
+using farm.Data;
+using farm.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
-namespace Tests
-{
-    public class CageTests
-    {
-        private AppDbContext GetInMemoryContext()
-        {
+namespace Tests {
+    public class CageTests {
+        private AppDbContext GetInMemoryContext() {
             var options = new DbContextOptionsBuilder<AppDbContext>()
                 .UseInMemoryDatabase(databaseName: "TestDatabase")
                 .Options;
             return new AppDbContext(options);
         }
 
-        private void ClearDatabase(AppDbContext context)
-        {
+        private void ClearDatabase(AppDbContext context) {
             context.Chickens.RemoveRange(context.Chickens);
             context.Cages.RemoveRange(context.Cages);
             context.Employees.RemoveRange(context.Employees);
@@ -25,10 +21,8 @@ namespace Tests
         }
 
         [Fact]
-        public void CanAssignChickenToCage()
-        {
-            using (var context = GetInMemoryContext())
-            {
+        public void CanAssignChickenToCage() {
+            using (var context = GetInMemoryContext()) {
                 ClearDatabase(context);
 
                 var cage = new Cage { EmployeeId = 1 };
@@ -45,10 +39,8 @@ namespace Tests
         }
 
         [Fact]
-        public void CanAssignEmployeeToCage()
-        {
-            using (var context = GetInMemoryContext())
-            {
+        public void CanAssignEmployeeToCage() {
+            using (var context = GetInMemoryContext()) {
                 ClearDatabase(context);
 
                 var employee = new Employee { Name = "John Doe", Salary = 5000 };

@@ -7,21 +7,12 @@ Welcome to the **Poultry Farm Management System** project! This is a console app
 
 ---
 
-## 🛠️ Project Structure
+## 🔧 Prerequisites
 
-KR-V7/  
-├── bin/                 # Build output (ignored in Git)  
-├── Data/                # Database context and seed data  
-├── Migrations/          # EF Core migrations  
-├── Models/              # Entity models  
-├── Repositories/        # Repositories for database operations  
-├── Tests/               # Unit tests  
-├── net8.0/              # Build artifacts (ignored in Git)  
-├── obj/                 # Build cache (ignored in Git)  
-├── Program.cs           # Main entry point  
-├── .gitignore           # Git ignore rules  
-├── ProjectSolution.sln  # Solution file  
-└── README.md            # Project documentation  
+Ensure you have the following installed on your system:
+
+- .NET 8.0 SDK  
+- Git  
 
 ---
 
@@ -32,8 +23,8 @@ Follow these steps to set up and run the project locally:
 ### 1. Clone the Repository
 
 ```
-git clone git@github.com:xqzmyyy/kr-variant7.git  
-cd kr-variant7
+git clone git@github.com:xqzmyyy/poultry-farm-management-system.git  
+cd poultry-farm-management-system
 ```
 
 ### 2. Restore Dependencies
@@ -89,7 +80,7 @@ dotnet ef migrations add <MigrationName>
 
 - **Apply migrations to update the database**:
 ```
-dotnet ef database update --project kr-v7/kr-v7.csproj
+dotnet ef database update
 ```
 
 - **Recreate the database (optional)**:
@@ -102,6 +93,12 @@ dotnet ef database update
 
 ## 🧪 Running Tests
 
+To open the folder containing the test files:
+
+```
+cd Tests/
+```
+
 The project includes unit tests for all core functionalities. To run the tests:
 
 ```
@@ -112,14 +109,6 @@ Test files are located in the `Tests/` directory.
 
 ---
 
-## 🔧 Prerequisites
-
-Ensure you have the following installed on your system:
-
-- .NET 8.0 SDK  
-- Git  
-
----
 ## 📦 **Database Models**
 
 ### 1. **Chicken** (Model for chickens)

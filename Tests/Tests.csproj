@@ -22,8 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../kr-v7/kr-v7.csproj" />
-    <ProjectReference Include="../kr-v7/kr-v7.csproj" />
+    <ProjectReference Include="../poultry-farm-management-system/farm.csproj" />
   </ItemGroup>
 
 </Project>
