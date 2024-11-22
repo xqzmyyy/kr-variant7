@@ -5,18 +5,24 @@ using System.Linq;
 using farm.Data;
 using farm.Models;
 
-namespace farm.Repositories {
-    public static class EmployeeRepository {
+namespace farm.Repositories 
+{
+    public static class EmployeeRepository 
+    {
         // get all employees
-        public static List<Employee> GetAllEmployees() {
-            using (var context = new AppDbContext()) {
+        public static List<Employee> GetAllEmployees() 
+        {
+            using (var context = new AppDbContext()) 
+            {
                 return context.Employees.Include(e => e.Cages).ToList();
             }
         }
 
         // get count of chicken per employee
-        public static Dictionary<Employee, int> GetEmployeeChickenCount() {
-            using (var context = new AppDbContext()) {
+        public static Dictionary<Employee, int> GetEmployeeChickenCount() 
+        {
+            using (var context = new AppDbContext()) 
+            {
                 return context.Employees
                     .Select(e => new
                     {

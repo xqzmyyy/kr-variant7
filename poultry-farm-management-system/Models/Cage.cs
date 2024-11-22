@@ -1,6 +1,7 @@
 namespace farm.Models
 
-public class Cage {
+public class Cage 
+{
     public int Id { get; set; } // id
 
     // relate with employee

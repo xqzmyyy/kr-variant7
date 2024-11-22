@@ -1,8 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using farm.Models;
 
-namespace farm.Data {
-    public class AppDbContext : DbContext {
+namespace farm.Data 
+{
+    public class AppDbContext : DbContext 
+    {
         // Chicken table
         public DbSet<Chicken> Chickens { get; set; }
 
@@ -28,7 +30,8 @@ namespace farm.Data {
         }
 
         // Configures relationships between entities
-        protected override void OnModelCreating(ModelBuilder modelBuilder) {
+        protected override void OnModelCreating(ModelBuilder modelBuilder) 
+        {
             // A cage is assigned to one employee (many cages - one employee)
             modelBuilder.Entity<Cage>()
                 .HasOne(c => c.Employee)
@@ -48,9 +51,11 @@ namespace farm.Data {
         }
 
         // start data
-        public void SeedData() {
+        public void SeedData() 
+        {
             // Ensures the database is populated only if it's empty
-            if (!Chickens.Any() && !Employees.Any() && !Cages.Any()) {
+            if (!Chickens.Any() && !Employees.Any() && !Cages.Any()) 
+            {
                 // Add employees
                 Employees.AddRange(new[]
                 {
@@ -64,7 +69,8 @@ namespace farm.Data {
                 SaveChanges();
 
                 // Add cages
-                Cages.AddRange(new[] {
+                Cages.AddRange(new[] 
+                {
                     new Cage { EmployeeId = 1, Date = DateTime.Today, IsEggLaid = true },
                     new Cage { EmployeeId = 1, Date = DateTime.Today, IsEggLaid = false },
                     new Cage { EmployeeId = 2, Date = DateTime.Today.AddDays(-1), IsEggLaid = true },
@@ -75,7 +81,8 @@ namespace farm.Data {
                 SaveChanges();
 
                 // Add chickens
-                Chickens.AddRange(new[] {
+                Chickens.AddRange(new[] 
+                {
                     new Chicken { Weight = 2.5, Age = 12, EggsPerMonth = 20, CageId = 1, Breed = "Леггорн" },
                     new Chicken { Weight = 3.0, Age = 15, EggsPerMonth = 25, CageId = 2, Breed = "Орпингтон" },
                     new Chicken { Weight = 1.8, Age = 10, EggsPerMonth = 18, CageId = 3, Breed = "Плімутрок" },
