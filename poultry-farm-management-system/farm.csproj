@@ -4,6 +4,7 @@
         <TargetFramework>net8.0</TargetFramework>
         <RootNamespace>kr_v7</RootNamespace>
         <ImplicitUsings>enable</ImplicitUsings>
+        <NoWarn>CS8618</NoWarn>
         <Nullable>enable</Nullable>
     </PropertyGroup>
     <ItemGroup>

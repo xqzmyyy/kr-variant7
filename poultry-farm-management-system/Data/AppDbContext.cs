@@ -6,13 +6,13 @@ namespace farm.Data
     public class AppDbContext : DbContext 
     {
         // Chicken table
-        public DbSet<Chicken> Chickens { get; set; }
+        public DbSet<Chicken> Chickens { get; set; } = null!;
 
         // Employee table
-        public DbSet<Employee> Employees { get; set; }
+        public DbSet<Employee> Employees { get; set; } = null!;
 
         // Cage table
-        public DbSet<Cage> Cages { get; set; }
+        public DbSet<Cage> Cages { get; set; } = null!;
 
         // Default constructor for SQLite configuration
         public AppDbContext() { }
@@ -36,21 +36,33 @@ namespace farm.Data
             modelBuilder.Entity<Cage>()
                 .HasOne(c => c.Employee)
                 .WithMany(e => e.Cages)
-                .HasForeignKey(c => c.EmployeeId);
+                .HasForeignKey(c => c.EmployeeId)
+                .OnDelete(DeleteBehavior.Cascade); // when u delete employee the cage will be also deleted
 
             // A cage is associated with one chicken (one-to-one relationship)
             modelBuilder.Entity<Cage>()
                 .HasOne(c => c.Chicken)
                 .WithOne(c => c.Cage)
-                .HasForeignKey<Cage>(c => c.ChickenId);
+                .HasForeignKey<Cage>(c => c.ChickenId)
+                .OnDelete(DeleteBehavior.SetNull); // when u delete chicken the cage started being empty
 
             // Default value for IsEggLaid
             modelBuilder.Entity<Cage>()
                 .Property(c => c.IsEggLaid)
                 .HasDefaultValue(false); // init value (false)
+
+            // Ensure that Employee.Name is required
+            modelBuilder.Entity<Employee>()
+                .Property(e => e.Name)
+                .IsRequired();
+
+            // Ensure that Chicken.Breed is required
+            modelBuilder.Entity<Chicken>()
+                .Property(c => c.Breed)
+                .IsRequired();
         }
 
-        // start data
+        // Seed initial data
         public void SeedData() 
         {
             // Ensures the database is populated only if it's empty
