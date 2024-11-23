@@ -59,11 +59,11 @@ namespace farm.Data
                 // Add employees
                 Employees.AddRange(new[]
                 {
-                    new Employee { Name = "Геннадій 1xbetович", Salary = 5000, PassportData = "AA123456" },
-                    new Employee { Name = "Тамара 1winовна", Salary = 6000, PassportData = "BB654321" },
-                    new Employee { Name = "Микола Parimatchович", Salary = 4800, PassportData = "CC789123" },
-                    new Employee { Name = "Юрій Favbetович", Salary = 5300, PassportData = "DD987654" },
-                    new Employee { Name = "Полтавський Палій", Salary = 5300, PassportData = "EE456789" },
+                    new Employee { Name = "Геннадій 1xbetович", Salary = 5000 },
+                    new Employee { Name = "Тамара 1winовна", Salary = 6000 },
+                    new Employee { Name = "Микола Parimatchович", Salary = 4800 },
+                    new Employee { Name = "Юрій Favbetович", Salary = 5300 },
+                    new Employee { Name = "Полтавський Палій", Salary = 5300 },
                 });
 
                 SaveChanges();
