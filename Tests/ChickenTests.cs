@@ -38,7 +38,7 @@ namespace Tests
                 context.SaveChanges();
 
                 // add chicken and relate to cage
-                var chicken = new Chicken { Weight = 2.5, Age = 12, EggsPerMonth = 20 };
+                var chicken = new Chicken { Weight = 2.5, Age = 12, EggsPerMonth = 20, Breed = "Леггорн" };
                 context.Chickens.Add(chicken);
                 context.SaveChanges();
 
@@ -66,7 +66,7 @@ namespace Tests
                 context.Cages.Add(cage);
                 context.SaveChanges();
 
-                var chicken = new Chicken { Weight = 2.5, Age = 12, EggsPerMonth = 20 };
+                var chicken = new Chicken { Weight = 2.5, Age = 12, EggsPerMonth = 20, Breed = "Леггорн" };
                 context.Chickens.Add(chicken);
                 context.SaveChanges();
 
@@ -90,8 +90,8 @@ namespace Tests
 
                 // add chicken
                 context.Chickens.AddRange(
-                    new Chicken { Weight = 2.5, Age = 12, EggsPerMonth = 20 },
-                    new Chicken { Weight = 3.0, Age = 15, EggsPerMonth = 30 }
+                    new Chicken { Weight = 2.5, Age = 12, EggsPerMonth = 20, Breed = "Леггорн" },
+                    new Chicken { Weight = 3.0, Age = 15, EggsPerMonth = 30, Breed = "Орпингтон" }
                 );
                 context.SaveChanges();
 
@@ -111,8 +111,8 @@ namespace Tests
 
                 // add chicken
                 context.Chickens.AddRange(
-                    new Chicken { Weight = 2.5, Age = 12, EggsPerMonth = 20 },
-                    new Chicken { Weight = 3.0, Age = 15, EggsPerMonth = 30 }
+                    new Chicken { Weight = 2.5, Age = 12, EggsPerMonth = 20, Breed = "Леггорн" },
+                    new Chicken { Weight = 3.0, Age = 15, EggsPerMonth = 30, Breed = "Орпингтон" }
                 );
                 context.SaveChanges();
 
