@@ -4,19 +4,19 @@ using farm.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
-namespace Tests 
+namespace Tests
 {
-    public class CageTests 
+    public class CageTests
     {
-        private AppDbContext GetInMemoryContext() 
+        private AppDbContext GetInMemoryContext()
         {
             var options = new DbContextOptionsBuilder<AppDbContext>()
-                .UseInMemoryDatabase(databaseName: "TestDatabase")
+                .UseInMemoryDatabase(databaseName: "TestDatabase_CageTests")
                 .Options;
             return new AppDbContext(options);
         }
 
-        private void ClearDatabase(AppDbContext context) 
+        private void ClearDatabase(AppDbContext context)
         {
             context.Chickens.RemoveRange(context.Chickens);
             context.Cages.RemoveRange(context.Cages);
@@ -25,17 +25,21 @@ namespace Tests
         }
 
         [Fact]
-        public void CanAssignChickenToCage() 
+        public void CanAssignChickenToCage()
         {
-            using (var context = GetInMemoryContext()) 
+            using (var context = GetInMemoryContext())
             {
                 ClearDatabase(context);
 
-                var cage = new Cage { EmployeeId = 1 };
+                var employee = new Employee { Name = "John Doe", Salary = 5000, Cages = new List<Cage>() };
+                context.Employees.Add(employee);
+                context.SaveChanges();
+
+                var cage = new Cage { EmployeeId = employee.Id, Employee = employee };
                 context.Cages.Add(cage);
                 context.SaveChanges();
 
-                var chicken = new Chicken { Weight = 2.5, Age = 12, EggsPerMonth = 20, CageId = cage.Id };
+                var chicken = new Chicken { Weight = 2.5, Age = 12, EggsPerMonth = 20, CageId = cage.Id, Cage = cage, Breed = "Леггорн" };
                 context.Chickens.Add(chicken);
                 context.SaveChanges();
 
@@ -45,14 +49,14 @@ namespace Tests
         }
 
         [Fact]
-        public void CanAssignEmployeeToCage() 
+        public void CanAssignEmployeeToCage()
         {
-            using (var context = GetInMemoryContext()) 
+            using (var context = GetInMemoryContext())
             {
                 ClearDatabase(context);
 
-                var employee = new Employee { Name = "John Doe", Salary = 5000 };
-                var cage = new Cage { Employee = employee };
+                var employee = new Employee { Name = "Jane Doe", Salary = 4500, Cages = new List<Cage>() };
+                var cage = new Cage { EmployeeId = employee.Id, Employee = employee };
 
                 context.Employees.Add(employee);
                 context.Cages.Add(cage);

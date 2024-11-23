@@ -11,8 +11,8 @@ Welcome to the **Poultry Farm Management System** project! This is a console app
 
 Ensure you have the following installed on your system:
 
-- .NET 8.0 SDK  
-- Git  
+- **.NET 8.0 SDK**  
+- **Git**
 
 ---
 
@@ -22,90 +22,107 @@ Follow these steps to set up and run the project locally:
 
 ### 1. Clone the Repository
 
-```
-git clone git@github.com:xqzmyyy/poultry-farm-management-system.git  
+```bash
+git clone git@github.com:xqzmyyy/poultry-farm-management-system.git
 cd poultry-farm-management-system
 ```
 
 ### 2. Restore Dependencies
 
-Make sure you have `.NET 8.0 SDK` installed, then restore all dependencies:
+Restore all project dependencies:
 
-```
+```bash
+cd poultry-farm-management-system
 dotnet restore
 ```
 
-### 3. Create Migrations (if needed)
+### 3. Install Required Libraries
 
-If you make changes to the models or are setting up for the first time:
+Make sure all necessary libraries are installed:
 
+```bash
+dotnet add package Microsoft.EntityFrameworkCore.Sqlite
+dotnet add package Microsoft.EntityFrameworkCore.Tools
+dotnet add package System.Data.SQLite
 ```
+
+For testing dependencies:
+
+```bash
+cd ../Tests
+dotnet add package Microsoft.EntityFrameworkCore.InMemory
+dotnet add package xunit
+dotnet add package xunit.runner.visualstudio
+dotnet add package coverlet.collector
+```
+
+### 4. Create Database Migrations
+
+If this is the first setup or after any model changes, create migrations:
+
+```bash
+cd poultry-farm-management-system
 dotnet ef migrations add InitialCreate
 ```
 
-### 4. Apply Migrations
+### 5. Apply Migrations to Create Database
 
-To apply the migrations and create the database:
+To create and apply the database schema, run:
 
-```
+```bash
 dotnet ef database update
 ```
 
-### 5. Build the Project
+### 6. Build the Project
 
 Build the project to ensure all dependencies and configurations are correct:
 
-```
+```bash
 dotnet build
-``` 
-
-### 6. Run the Application
-
-To start the application, run:
-
 ```
+
+### 7. Run the Application
+
+To start the application, use:
+
+```bash
 dotnet run
-``` 
+```
 
 ---
 
 ## 📋 Database Management
 
-The project uses **Entity Framework Core** and **SQLite** for database management. Here are some common operations:
+The project uses **Entity Framework Core** and **SQLite** for database management.
 
 - **Create a new migration**:
-```  
-dotnet ef migrations add <MigrationName> 
+```bash
+dotnet ef migrations add <MigrationName>
 ```
 
-- **Apply migrations to update the database**:
-```
+- **Apply migrations**:
+```bash
 dotnet ef database update
 ```
 
-- **Recreate the database (optional)**:
-```
-rm poultry-farm-management-system/Data/database.db  
-dotnet ef database update  
+- **Recreate the database**:
+```bash
+rm -rf poultry-farm-management-system/Data/database.db
+dotnet ef database update
 ```
 
 ---
 
 ## 🧪 Running Tests
 
-To open the folder containing the test files:
+To run unit tests, navigate to the `Tests` directory:
 
-```
-cd Tests/
-```
-
-The project includes unit tests for all core functionalities. To run the tests:
-
-```
+```bash
+cd Tests
 dotnet test
 ```
 
-Test files are located in the `Tests/` directory.
+Test results and coverage will be displayed in the console.
 
 ---
 
@@ -119,7 +136,9 @@ Stores information about each chicken on the poultry farm.
 - **Weight** (double): Weight of the chicken.
 - **Age** (int): Age of the chicken in months.
 - **EggsPerMonth** (int): Number of eggs laid by the chicken per month.
+- **Breed** (string): Breed of the chicken.
 - **CageId** (int): Reference to the cage where the chicken is located.
+- **Cage** (Cage): Navigation property linking the chicken to its cage.
 
 ---
 
@@ -129,7 +148,7 @@ Stores data about employees on the poultry farm.
 #### Fields:
 - **Id** (int): Unique identifier for the employee.
 - **Name** (string): Name of the employee.
-- **Salary** (double): Salary of the employee.
+- **Salary** (decimal): Salary of the employee.
 - **Cages** (List<Cage>): List of cages assigned to the employee.
 
 ---
@@ -143,32 +162,44 @@ Stores information about cages where chickens are kept.
 - **ChickenId** (int?): Reference to the chicken currently in the cage (can be null).
 - **Employee** (Employee): Navigation property linking the cage to its employee.
 - **Chicken** (Chicken): Navigation property linking the cage to its chicken.
+- **Date** (DateTime): The date when the cage was last used.
+- **IsEggLaid** (bool): Indicates whether an egg was laid.
 
 ---
 
 ## 🔨 **Main Methods**
 
-### 1. **Chicken Methods**
+### Chicken Methods
 - **AddChicken**: Adds a new chicken to the database.
 - **DeleteChicken**: Removes a chicken from the database by its ID.
-- **GetChickenWithMostEggs**: Retrieves the chicken that lays the most eggs.
-- **CalculateAverageEggs**: Calculates the average number of eggs for chickens based on weight and age.
+- **ListAllChickens**: Displays all chickens with their details.
+- **CalculateAverageEggs**: Calculates the average number of eggs based on weight and age.
+- **CageWithTopChicken**: Finds the cage with the most productive chicken.
 
-### 2. **Employee Methods**
-- **GetEmployeeChickenCount**: Returns the number of chickens assigned to an employee.
+---
+
+### Employee Methods
 - **ListAllEmployees**: Retrieves all employees and their details.
+- **EggsCollectedByEmployees**: Shows the number of eggs collected by each employee.
 
-### 3. **Cage Methods**
-- **AssignChickenToCage**: Assigns a chicken to a cage.
-- **GetAllCages**: Retrieves all cages, including their assigned chickens and employees.
+---
+
+### Cage Methods
+- **ListAllCages**: Retrieves all cages with their associated chickens and employees.
 
 ---
 
 ## 🧪 **Testing Methods**
 Tests for all main functionalities are implemented in the `Tests` directory using xUnit:
-- **ChickenTests**: Validates adding, deleting, and calculating chicken statistics.
-- **EmployeeTests**: Validates assigning cages to employees.
-- **CageTests**: Validates cage assignment and chicken-cage relationships.
+
+### ChickenTests
+- Validates adding, deleting, and calculating chicken statistics.
+
+### EmployeeTests
+- Validates assigning cages to employees.
+
+### CageTests
+- Validates cage assignment and chicken-cage relationships.
 
 ---
 
@@ -183,3 +214,5 @@ This project is licensed under the MIT License.
 - **kk**
 
 Developed by the student as a coursework.
+
+---
