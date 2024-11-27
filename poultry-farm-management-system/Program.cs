@@ -7,81 +7,56 @@ class Program
 {
     static void Main(string[] args)
     {
+        var menuOptions = new (string Description, Action Method)[]
+        {
+            ("📋 Список всіх курей", ListAllChickens),
+            ("📊 Сводна інформація про птахофабрику", FarmSummary),
+            ("👷 Список всіх працівників", ListAllEmployees),
+            ("🛖 Список всіх кліток", ListAllCages),
+            ("🥚 Середня кількість яєць для курей заданої ваги та віку", AverageEggsForWeightAndAge),
+            ("📅 Загальна кількість яєць за діапазон днів та їхня вартість", TotalEggsForDateRange),
+            ("🏆 Клітка з куркою, яка знесла найбільше яєць", CageWithTopChicken),
+            ("👨‍🌾 Кількість яєць, зібраних кожним працівником", EggsCollectedByEmployees),
+            ("⚠️ Куриці з несучістю нижче середнього рівня по фабриці", ChickensBelowAverage),
+            ("➕ Додати нову курку", AddChicken),
+            ("❌ Видалити курку", DeleteChicken),
+            ("🚪 Вийти", () => { PrintMessage("До побачення! 🚪", ConsoleColor.Cyan); Environment.Exit(0); })
+        };
+
         while (true)
         {
             Console.Clear();
             PrintHeader("=== Меню ===", ConsoleColor.Red);
-            PrintMenuOption("1", "📋 Список всіх курей");
-            PrintMenuOption("2", "📊 Сводна інформація про птахофабрику");
-            PrintMenuOption("3", "👷 Список всіх працівників");
-            PrintMenuOption("4", "🛖 Список всіх кліток");
-            PrintMenuOption("5", "🥚 Середня кількість яєць для курей заданої ваги та віку");
-            PrintMenuOption("6", "📅 Загальна кількість яєць за діапазон днів та їхня вартість");
-            PrintMenuOption("7", "🏆 Клітка з куркою, яка знесла найбільше яєць");
-            PrintMenuOption("8", "👨‍🌾 Кількість яєць, зібраних кожним працівником");
-            PrintMenuOption("9", "⚠️ Куриці з несучістю нижче середнього рівня по фабриці");
-            PrintMenuOption("10", "➕ Додати нову курку");
-            PrintMenuOption("11", "❌ Видалити курку");
-            PrintMenuOption("12", "🚪 Вийти");
+
+            for (int i = 0; i < menuOptions.Length; i++)
+            {
+                PrintMenuOption((i + 1).ToString(), menuOptions[i].Description);
+            }
 
             Console.WriteLine();
             PrintChickenArt();
 
             Console.Write("\nВаш вибір: ");
             Console.ForegroundColor = ConsoleColor.DarkYellow;
-            var choice = Console.ReadLine();
+            var input = Console.ReadLine();
             Console.ResetColor();
 
             Console.Clear();
 
-            // menu options
-            switch (choice)
+            if (int.TryParse(input, out var choice) && choice >= 1 && choice <= menuOptions.Length)
             {
-                case "1":
-                    ListAllChickens();
-                    break;
-                case "2":
-                    FarmSummary();
-                    break;
-                case "3":
-                    ListAllEmployees();
-                    break;
-                case "4":
-                    ListAllCages();
-                    break;
-                case "5":
-                    AverageEggsForWeightAndAge();
-                    break;
-                case "6":
-                    TotalEggsForDateRange();
-                    break;
-                case "7":
-                    CageWithTopChicken();
-                    break;
-                case "8":
-                    EggsCollectedByEmployees();
-                    break;
-                case "9":
-                    ChickensBelowAverage();
-                    break;
-                case "10":
-                    AddChicken();
-                    break;
-                case "11":
-                    DeleteChicken();
-                    break;
-                case "12":
-                    PrintMessage("До побачення! 🚪", ConsoleColor.Cyan);
-                    return;
-                default:
-                    PrintMessage("Неправильний вибір. Спробуйте ще раз. ❌", ConsoleColor.Red);
-                    break;
+                menuOptions[choice - 1].Method.Invoke();
+            }
+            else
+            {
+                PrintMessage("Неправильний вибір. Спробуйте ще раз. ❌", ConsoleColor.Red);
             }
 
             PrintMessage("\nНатисніть будь-яку кнопку, щоб повернутися до меню...", ConsoleColor.Yellow);
             Console.ReadKey();
         }
     }
+
 
     // get list of all chickens
     static void ListAllChickens()
