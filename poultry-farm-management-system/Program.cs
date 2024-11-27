@@ -2,11 +2,19 @@
 using System.Linq;
 using farm.Repositories;
 using farm.Models;
+using farm.Data;
 
 class Program
 {
     static void Main(string[] args)
     {
+
+        using (var context = new AppDbContext())
+        {
+            context.Database.EnsureCreated();
+            context.SeedData();
+        }
+
         var menuOptions = new (string Description, Action Method)[]
         {
             ("📋 Список всіх курей", ListAllChickens),
